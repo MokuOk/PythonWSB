@@ -1,0 +1,167 @@
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
+import time
+
+first_name = input("Jak masz na imię?: ")
+last_name = input("Jak masz na nazwisko?: ")
+word = input("Podaj słowo bezpieczeństwa(Bez polskich znaków): ")
+gender = input("Podaj swoją płeć(M/K/Inna): ")
+gender = gender.lower()
+
+while True:
+    day = int(input("Podaj dzień urodzenia(1-31): "))
+    if 1 <= day <= 31:
+        day = day
+        break
+    else:
+        print("Podaj liczbę z przedziału od 1 do 31.")
+
+while True:
+    month = int(input("Podaj miesiąc urodzenia(1-12): "))
+    if 1 <= month <= 12:
+        month = month
+        break
+    else:
+        print("Podaj liczbę z przedziału od 1 do 12.")
+
+while True:
+    year = int(input("Podaj rok urodzenia: "))
+    if 1925 <= year <= 2024:
+        year = year
+        break
+    else:
+        print("Podaj poprawny rok urodzenia.")
+
+recoveryEmail = input("Podaj pomocniczy adres e-mail: ")
+
+password = input("Jakie chcesz mieć hasło?(Małe i duże litery i znak specjalny): ")
+
+login = (first_name+'.'+last_name+'.'+word)
+email = (first_name+'.'+last_name+'.'+word+'@wp.pl')
+
+
+driver = webdriver.Chrome()
+url = "https://poczta.wp.pl/rejestracja"
+driver.get(url)
+driver.maximize_window()
+
+first_name_field = driver.find_element('xpath', "//input[@id='name']")
+first_name_field.send_keys(first_name.capitalize())
+
+last_name_field = driver.find_element('xpath', "//input[@id='lastName']")
+last_name_field.send_keys(last_name.capitalize())
+
+login_field = driver.find_element('xpath', "//input[@id='login']")
+login_field.send_keys(login.lower())
+
+gender_field = Select(driver.find_element('xpath',"//select[@id='sex']"))
+if gender == 'm':
+    gender_field.select_by_visible_text('Mężczyzna')
+elif gender == 'k':
+    gender_field.select_by_visible_text('Kobieta')
+elif gender == 'inna':
+    gender_field.select_by_visible_text('Mojej płci nie ma na liście')
+else:
+    print("Nieprawidłowa opcja płci")
+    driver.quit()
+    exit()
+
+day_field = driver.find_element('xpath', "//input[@id='date']")
+day_field.send_keys(day)
+
+month_field = Select(driver.find_element("xpath","//select[@id='month']"))
+
+if month == 1:
+    month_field.select_by_visible_text('styczeń')
+elif month == 2:
+    month_field.select_by_visible_text('luty')
+elif month == 3:
+    month_field.select_by_visible_text('marzec')
+elif month == 4:
+    month_field.select_by_visible_text('kwiecień')
+elif month == 5:
+    month_field.select_by_visible_text('maj')
+elif month == 6:
+    month_field.select_by_visible_text('czerwiec')
+elif month == 7:
+    month_field.select_by_visible_text('lipiec')
+elif month == 8:
+    month_field.select_by_visible_text('sierpień')
+elif month == 9:
+    month_field.select_by_visible_text('wrzesień')
+elif month == 10:
+    month_field.select_by_visible_text('październik')
+elif month == 11:
+    month_field.select_by_visible_text('listopad')
+elif month == 12:
+    month_field.select_by_visible_text('grudzień')
+else:
+    print("Nieprawidłowy miesiąc")
+    driver.quit()
+    exit()
+
+year_field = driver.find_element('xpath', "//input[@id='year']")
+year_field.send_keys(year)
+
+driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+time.sleep(2)
+next_button = driver.find_element("css selector", "button.sc-bcXHqe.Buttons__Button-sc-g2fyk2-0.iGblCX.gwugjh")
+#next_button = driver.find_elements("class name","sc-bcXHqe Buttons__Button-sc-g2fyk2-0 iGblCX gwugjh")
+time.sleep(2)
+next_button.click()
+time.sleep(2)
+
+password_field = driver.find_element('xpath', "//input[@id='password']")
+password_field.send_keys(password)
+
+passwordRepeat_field = driver.find_element('xpath', "//input[@id='passwordRepeat']")
+passwordRepeat_field.send_keys(password)
+
+time.sleep(2)
+next2_button = driver.find_element("css selector", "button.sc-bcXHqe.Buttons__Button-sc-g2fyk2-0.iGblCX.gwugjh")
+time.sleep(2)
+next2_button.click()
+time.sleep(2)
+
+recoveryEmail_field = driver.find_element('xpath', "//input[@id='recoveryEmail']")
+recoveryEmail_field.send_keys(recoveryEmail)
+
+time.sleep(2)
+next3_button = driver.find_element("css selector", "button.sc-bcXHqe.Buttons__Button-sc-g2fyk2-0.iGblCX.gwugjh")
+time.sleep(2)
+next3_button.click()
+time.sleep(2)
+
+check_all_field = driver.find_element('xpath', "//input[@id='check-all']")
+check_all_field.click()
+
+driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+time.sleep(2)
+end_button = driver.find_element("css selector", "button.sc-bcXHqe.Buttons__Button-sc-g2fyk2-0.grFaty.gwugjh")
+time.sleep(2)
+end_button.click()
+time.sleep(2)
+
+login_page_button = driver.find_element("css selector", "button.sc-bcXHqe.Buttons__Button-sc-g2fyk2-0.jVcrPq.gwugjh")
+time.sleep(2)
+login_page_button.click()
+time.sleep(2)
+
+email_login_field = driver.find_element('xpath', "//input[@id='login']")
+email_login_field.send_keys(email.lower())
+
+email_password_field = driver.find_element('xpath', "//input[@id='password']")
+email_password_field.send_keys(password)
+
+time.sleep(2)
+email_log_button = driver.find_element("css selector", "button.sc-bcXHqe.Buttons__Button-sc-g2fyk2-0.SrXXy.gwugjh")
+time.sleep(2)
+email_log_button.click()
+time.sleep(2)
+
+time.sleep(5)
+driver.quit()
+
+print('Twój login to: ',email.lower())
+print('Twoje hasło to: ', password)
